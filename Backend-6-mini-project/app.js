@@ -25,7 +25,9 @@ app.get('/profile', isLoggedIn, async (req, res) => {
 })
 
 app.post('/register', async (req, res) => {
+    res.render("register");
     let {email, password, name, username, age} = req.body;
+    if(!email || !password || !name || !age) return res.status(400).send("enter valid entries");
     let user = await userModel.findOne({email});
     if(user) return res.status(500).send("user already register");
     
@@ -48,6 +50,7 @@ app.post('/register', async (req, res) => {
 
 app.post('/login', async (req, res) => {
     let {email, password} = req.body;
+    if (!email || !password) return res.status(400).send("Enter valid entries");
     let user = await userModel.findOne({email});
     if(!user) return res.status(500).send("user not found");
     
@@ -75,4 +78,6 @@ function isLoggedIn(req, res, next){
     }
 }
 
-app.listen(3000);
+app.listen(3000, ()=>{
+    console.log("server is running on port 3000");
+});
